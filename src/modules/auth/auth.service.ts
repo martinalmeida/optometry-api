@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Users } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
@@ -6,8 +6,8 @@ import { Injectable } from '@nestjs/common';
 export class AuthService {
   constructor(private prisma: PrismaService) {}
 
-  async getUserAuth(data: User): Promise<User> {
-    return this.prisma.user.findFirst({
+  async getUserAuth(data: Users): Promise<Users> {
+    return this.prisma.users.findFirst({
       where: {
         email: data.email,
         password: data.password,

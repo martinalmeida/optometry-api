@@ -1,13 +1,13 @@
 import { Body, Controller, Post, NotFoundException } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { User } from '@prisma/client';
+import { Users } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly taskService: AuthService) {}
 
   @Post()
-  async authenticate(@Body() data: User) {
+  async authenticate(@Body() data: Users) {
     try {
       return await this.taskService.getUserAuth(data);
     } catch (error) {

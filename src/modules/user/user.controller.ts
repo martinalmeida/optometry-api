@@ -9,7 +9,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from '@prisma/client';
+import { Users } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
@@ -28,12 +28,12 @@ export class UserController {
   }
 
   @Post()
-  async createUser(@Body() data: User) {
+  async createUser(@Body() data: Users) {
     return this.userService.createUser(data);
   }
 
   @Put(':id')
-  async updateUser(@Param('id') id: string, @Body() data: User) {
+  async updateUser(@Param('id') id: string, @Body() data: Users) {
     try {
       return await this.userService.updateUser(Number(id), data);
     } catch (error) {
