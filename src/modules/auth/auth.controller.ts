@@ -21,13 +21,4 @@ export class AuthController {
       return service;
     }
   }
-
-  @Post('register')
-  async create(@Body() data: Users) {
-    try {
-      return await this.taskService.getUserAuth(data);
-    } catch (error) {
-      throw new NotFoundException('User does not exist');
-    }
-  }
 }
