@@ -2,7 +2,8 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login.dto';
-import { compare } from 'bcrypt';
+import { RegisterUserDto } from './dto/register.dto';
+import { compare, hash } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async getUserAuth(data: LoginUserDto): Promise<object> {
+  async authUser(data: LoginUserDto): Promise<object> {
     const findUser = await this.prisma.users.findFirst({
       where: {
         email: data.email,
@@ -25,5 +26,21 @@ export class AuthService {
         message: 'Bienvenido a Optometry',
         token: this.jwtService.sign(findUser),
       };
+  }
+
+  async registerUser(data: RegisterUserDto): Promise<object> {
+    const password = await hash(data.password, Number(process.env.SALT_ROUNDS));
+    const createUser = await this.prisma.users.create({
+      data: {
+        name: data.name,
+        lastname: data.lastname,
+        email: data.email,
+        password: password,
+      },
+    });
+    return {
+      user: createUser,
+      token: this.jwtService.sign(createUser),
+    };
   }
 }
