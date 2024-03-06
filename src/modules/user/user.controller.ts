@@ -21,21 +21,40 @@ export class UserController {
   @Get()
   @UseGuards(JwtAuthGuard)
   async getAllUsers() {
-    return this.userService.getAllUsers();
+    try {
+      const users = await this.userService.getAllUsers();
+      if (!users) throw new NotFoundException('No se encontraron usuarios');
+      return users;
+    } catch (error) {
+      throw new NotFoundException(
+        'Ha ocurrido un error al obtener los usuarios',
+      );
+    }
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async getUserById(@Param('id') id: number) {
-    const userFound = await this.userService.getUserById(Number(id));
-    if (!userFound) throw new NotFoundException('Usuario no encontrado');
-    return userFound;
+    try {
+      const userFound = await this.userService.getUserById(Number(id));
+      if (!userFound) throw new NotFoundException('No se encontro el usuario');
+      return userFound;
+    } catch (error) {
+      throw new NotFoundException(
+        'Ha ocurrido un error al obtener los usuarios',
+      );
+    }
   }
 
   @Post()
   @UseGuards(JwtAuthGuard)
   async createUser(@Body() data: CreateUserDto) {
-    return this.userService.createUser(data);
+    try {
+      const user = await this.userService.createUser(data);
+      return user;
+    } catch (error) {
+      throw new NotFoundException('No se pudo crear el usuario');
+    }
   }
 
   @Put(':id')
@@ -45,7 +64,7 @@ export class UserController {
       const updatedUser = await this.userService.updateUser(id, data);
       return updatedUser;
     } catch (error) {
-      throw new NotFoundException('Usuario no encontrado');
+      throw new NotFoundException('No se pudo actualizar el usuario');
     }
   }
 
@@ -55,7 +74,7 @@ export class UserController {
     try {
       return await this.userService.deleteUser(Number(id));
     } catch (error) {
-      throw new NotFoundException('Usuario no encontrado');
+      throw new NotFoundException('No se pudo eliminar el usuario');
     }
   }
 }
