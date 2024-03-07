@@ -14,10 +14,31 @@ datasource db {
 }
 
 model Users {
-  id       Int     @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   name     String
-  lastname String
-  email    String  @unique
+  lastname String?
+  email    String    @unique
   password String
-  status   Boolean @default(true)
+  created  DateTime
+  updated  DateTime?
+  deleted  DateTime?
+  status   Boolean   @default(true)
+}
+
+model Patients {
+  id       Int       @id @default(autoincrement())
+  name     String
+  lastname String?
+  tp_doc   String
+  num_doc  BigInt    @unique
+  gender   String
+  age      Int
+  phone    BigInt
+  address  String?
+  email    String?
+  id_user  Int
+  created  DateTime
+  updated  DateTime?
+  deleted  DateTime?
+  status   Boolean   @default(true)
 }

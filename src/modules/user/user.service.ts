@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { CreateUserDto } from './dto/create.dto';
 import { UpdateUserDto } from './dto/update.dto';
-import { json } from 'stream/consumers';
 
 @Injectable()
 export class UserService {
