@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login.dto';
 import { RegisterUserDto } from './dto/register.dto';
 import { compare, hash } from 'bcrypt';
+import { dateTime } from '../../helpers/datetime.helper';
 
 @Injectable()
 export class AuthService {
@@ -36,6 +37,7 @@ export class AuthService {
         lastname: data.lastname,
         email: data.email,
         password: password,
+        created: dateTime(),
       },
     });
     return {

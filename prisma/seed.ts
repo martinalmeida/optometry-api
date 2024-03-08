@@ -1,11 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcrypt';
+import { dateTime } from '../src/helpers/datetime.helper';
 
 const prisma = new PrismaClient();
 
 async function seed() {
   const password = await hash('paass123', Number(process.env.SALT_ROUNDS));
-  const datetime = new Date();
+  const datetime = dateTime();
 
   await prisma.users.create({
     data: {

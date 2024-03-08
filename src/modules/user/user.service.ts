@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { CreateUserDto } from './dto/create.dto';
 import { UpdateUserDto } from './dto/update.dto';
+import { dateTime } from '../../helpers/datetime.helper';
 
 @Injectable()
 export class UserService {
@@ -16,6 +17,9 @@ export class UserService {
         lastname: true,
         email: true,
         status: true,
+      },
+      where: {
+        deleted: null,
       },
     });
   }
@@ -31,6 +35,7 @@ export class UserService {
       },
       where: {
         id: Number(id),
+        deleted: null,
       },
     });
   }
@@ -42,6 +47,7 @@ export class UserService {
       lastname: data.lastname,
       email: data.email,
       password: password,
+      created: dateTime(),
     };
     await this.prisma.users.create({
       data: user,
@@ -58,6 +64,7 @@ export class UserService {
       lastname: data.lastname,
       email: data.email,
       password: password,
+      updated: dateTime(),
     };
     await this.prisma.users.update({
       data: user,
@@ -67,7 +74,10 @@ export class UserService {
   }
 
   async deleteUser(id: number): Promise<object> {
-    await this.prisma.users.delete({
+    await this.prisma.users.update({
+      data: {
+        deleted: dateTime(),
+      },
       where: {
         id: Number(id),
       },
