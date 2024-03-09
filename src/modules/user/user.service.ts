@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { hash } from 'bcrypt';
 import { CreateUserDto } from './dto/create.dto';
 import { UpdateUserDto } from './dto/update.dto';
-import { dateTime } from '../../helpers/datetime.helper';
+import { dateTime } from '@helpers/datetime.helper';
 
 @Injectable()
 export class UserService {
