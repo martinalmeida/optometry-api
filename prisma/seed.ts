@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcrypt';
-import { dateTime } from '@helpers/datetime.helper';
+import { dateTime } from '@helpers/dateTime';
 
 const prisma = new PrismaClient();
 

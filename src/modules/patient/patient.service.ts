@@ -2,7 +2,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create.dto';
 import { UpdatePatientDto } from './dto/update.dto';
-import { dateTime } from '@helpers/datetime.helper';
+import { dateTime } from '@helpers/dateTime';
 
 @Injectable()
 export class PatientService {

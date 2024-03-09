@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login.dto';
 import { RegisterUserDto } from './dto/register.dto';
 import { compare, hash } from 'bcrypt';
-import { dateTime } from '@helpers/datetime.helper';
+import { dateTime } from '@helpers/dateTime';
 
 @Injectable()
 export class AuthService {
