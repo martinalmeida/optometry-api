@@ -15,10 +15,10 @@ datasource db {
 
 model Users {
   id       Int       @id @default(autoincrement())
-  name     String
-  lastname String?
-  email    String    @unique
-  password String
+  name     String // Nombres
+  lastname String? // Apellidos
+  email    String    @unique // Correo
+  password String // Contraseña
   created  DateTime
   updated  DateTime?
   deleted  DateTime?
@@ -26,19 +26,58 @@ model Users {
 }
 
 model Patients {
-  id       Int       @id @default(autoincrement())
-  name     String
-  lastname String?
-  tp_doc   String
-  num_doc  BigInt    @unique
-  gender   String
-  age      Int
-  phone    BigInt
-  address  String?
-  email    String?
-  id_user  Int
-  created  DateTime
-  updated  DateTime?
-  deleted  DateTime?
-  status   Boolean   @default(true)
+  id            Int       @id @default(autoincrement())
+  name          String // Nombres
+  lastname      String? // Apellidos
+  tp_doc        String // Tipo de documento
+  num_doc       BigInt    @unique // Número de documento
+  gender        String // Genero
+  date_of_birth DateTime // Fecha de nacimiento
+  age           Int // Edad
+  phone         BigInt // Telefono
+  address       String? // Dirección
+  email         String? // Correo
+  id_user       Int
+  created       DateTime
+  updated       DateTime?
+  deleted       DateTime?
+  status        Boolean   @default(true)
+}
+
+model OptometricHistory {
+  id                   Int       @id @default(autoincrement())
+  // Antecedentes oculares
+  ocular_conditions    String? // Cualquier condición ocular preexistente (por ejemplo, glaucoma, cataratas)
+  family_history       String? // Antecedentes familiares de enfermedades oculares
+  // Agudeza visual
+  visual_acuity_left   String? // Agudeza visual ojo izquierdo (por ejemplo, "20/20")
+  visual_acuity_right  String? // Agudeza visual ojo derecho
+  // Refracción
+  refraction_left      String? // Refracción ojo izquierdo (por ejemplo, "-2.00 D")
+  refraction_right     String? // Refracción ojo derecho
+  // Presión intraocular
+  intraocular_pressure String? // Presión intraocular (por ejemplo, "15 mmHg")
+  // Examen con lámpara de hendidura
+  slit_lamp_exam       String? // Resultados del examen con lámpara de hendidura
+  // Oftalmoscopia de fondo
+  fundoscopy           String? // Resultados de la oftalmoscopia de fondo
+  // Diagnóstico y plan de tratamiento
+  diagnosis            String? // Diagnóstico (por ejemplo, "Miopía", "Retinopatía diabética")
+  treatment_plan       String? // Plan de tratamiento recomendado
+  // Seguimiento
+  follow_up_date       DateTime? // Fecha de seguimiento
+  // Campos adicionales (personalízalos según tus necesidades)
+  visual_field_test    String? // Resultados de pruebas de campo visual
+  color_vision_test    String? // Resultados de pruebas de visión de color
+  corneal_topography   String? // Resultados de topografía corneal
+  anterior_segment     String? // Hallazgos del examen del segmento anterior
+  posterior_segment    String? // Hallazgos del examen del segmento posterior
+  other_notes          String? // Cualquier otra nota relevante
+  // Campos de auditoría
+  id_user              Int
+  id_pat               Int
+  created              DateTime
+  updated              DateTime?
+  deleted              DateTime?
+  status               Boolean   @default(true)
 }

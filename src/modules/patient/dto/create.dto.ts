@@ -1,15 +1,24 @@
-import { IsNotEmpty, IsEmail, Length } from 'class-validator';
+import {
+  IsOptional,
+  IsNotEmpty,
+  IsString,
+  IsEmail,
+  Length,
+} from 'class-validator';
 
 export class CreatePatientDto {
   @IsNotEmpty()
+  @IsString()
   @Length(1, 191)
   name: string;
 
   @IsNotEmpty()
+  @IsString()
   @Length(0, 191)
   lastname: string;
 
   @IsNotEmpty()
+  @IsString()
   @Length(1, 191)
   tp_doc: string;
 
@@ -18,6 +27,7 @@ export class CreatePatientDto {
   num_doc: number;
 
   @IsNotEmpty()
+  @IsString()
   @Length(1, 191)
   gender: string;
 
@@ -29,11 +39,12 @@ export class CreatePatientDto {
   @Length(1, 20)
   phone: number;
 
-  @IsNotEmpty()
+  @IsOptional()
+  @IsString()
   @Length(0, 191)
   address: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEmail()
   @Length(0, 191)
   email: string;
