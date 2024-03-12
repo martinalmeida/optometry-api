@@ -10,8 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PatientService } from './patient.service';
-import { CreatePatientDto } from './dto/create.dto';
-import { UpdatePatientDto } from './dto/update.dto';
+import { PatientDto } from './dto/patient.dto';
 import { JwtAuthGuard } from 'src/guards/jwt.guard';
 
 @Controller('patient')
@@ -48,7 +47,7 @@ export class PatientController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async createUser(@Body() data: CreatePatientDto) {
+  async createUser(@Body() data: PatientDto) {
     try {
       const user = await this.patientService.createPatient(data);
       return user;
@@ -59,7 +58,7 @@ export class PatientController {
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  async updateUser(@Param('id') id: number, @Body() data: UpdatePatientDto) {
+  async updateUser(@Param('id') id: number, @Body() data: PatientDto) {
     try {
       const updatedUser = await this.patientService.updatePatient(id, data);
       return updatedUser;

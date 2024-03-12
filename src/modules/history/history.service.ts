@@ -1,7 +1,6 @@
 import { PrismaService } from '../../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { CreateHistoryDto } from './dto/create.dto';
-import { UpdateHistoryDto } from './dto/update.dto';
+import { HistoryDto } from './dto/history.dto';
 import { dateTime } from '@helpers/dateTime';
 
 @Injectable()
@@ -25,7 +24,7 @@ export class HistoryService {
     });
   }
 
-  async createHistory(data: CreateHistoryDto): Promise<object> {
+  async createHistory(data: HistoryDto): Promise<object> {
     await this.prisma.optometricHistory.create({
       data: {
         ...data,
@@ -37,7 +36,7 @@ export class HistoryService {
     };
   }
 
-  async updateHistory(id: number, data: UpdateHistoryDto): Promise<object> {
+  async updateHistory(id: number, data: HistoryDto): Promise<object> {
     await this.prisma.optometricHistory.update({
       data: {
         ...data,

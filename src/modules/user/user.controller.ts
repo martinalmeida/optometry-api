@@ -10,8 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create.dto';
-import { UpdateUserDto } from './dto/update.dto';
+import { UserDto } from './dto/user.dto';
 import { JwtAuthGuard } from 'src/guards/jwt.guard';
 
 @Controller('user')
@@ -48,7 +47,7 @@ export class UserController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async createUser(@Body() data: CreateUserDto) {
+  async createUser(@Body() data: UserDto) {
     try {
       const user = await this.userService.createUser(data);
       return user;
@@ -59,7 +58,7 @@ export class UserController {
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  async updateUser(@Param('id') id: number, @Body() data: UpdateUserDto) {
+  async updateUser(@Param('id') id: number, @Body() data: UserDto) {
     try {
       const updatedUser = await this.userService.updateUser(id, data);
       return updatedUser;

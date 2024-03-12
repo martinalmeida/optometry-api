@@ -6,7 +6,7 @@ import {
   Length,
 } from 'class-validator';
 
-export class CreatePatientDto {
+export class PatientDto {
   @IsNotEmpty()
   @IsString()
   @Length(1, 191)
@@ -30,6 +30,10 @@ export class CreatePatientDto {
   @IsString()
   @Length(1, 191)
   gender: string;
+
+  @IsNotEmpty()
+  @IsString()
+  date_of_birth: string;
 
   @IsNotEmpty()
   @Length(1, 11)

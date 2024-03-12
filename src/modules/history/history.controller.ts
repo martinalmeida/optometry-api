@@ -10,8 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { HistoryService } from './history.service';
-import { CreateHistoryDto } from './dto/create.dto';
-import { UpdateHistoryDto } from './dto/update.dto';
+import { HistoryDto } from './dto/history.dto';
 import { JwtAuthGuard } from 'src/guards/jwt.guard';
 
 @Controller('history')
@@ -49,7 +48,7 @@ export class HistoryController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async createUser(@Body() data: CreateHistoryDto) {
+  async createUser(@Body() data: HistoryDto) {
     try {
       const user = await this.historyService.createHistory(data);
       return user;
@@ -60,7 +59,7 @@ export class HistoryController {
 
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  async updateUser(@Param('id') id: number, @Body() data: UpdateHistoryDto) {
+  async updateUser(@Param('id') id: number, @Body() data: HistoryDto) {
     try {
       const updatedUser = await this.historyService.updateHistory(id, data);
       return updatedUser;

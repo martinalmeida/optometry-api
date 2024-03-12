@@ -6,7 +6,7 @@ import {
   IsDate,
 } from 'class-validator';
 
-export class CreateHistoryDto {
+export class HistoryDto {
   @IsOptional()
   @IsString()
   @Length(0, 191)

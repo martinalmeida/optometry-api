@@ -1,7 +1,6 @@
 import { PrismaService } from '../../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { CreatePatientDto } from './dto/create.dto';
-import { UpdatePatientDto } from './dto/update.dto';
+import { PatientDto } from './dto/patient.dto';
 import { dateTime } from '@helpers/dateTime';
 
 @Injectable()
@@ -25,7 +24,7 @@ export class PatientService {
     });
   }
 
-  async createPatient(data: CreatePatientDto): Promise<object> {
+  async createPatient(data: PatientDto): Promise<object> {
     await this.prisma.patients.create({
       data: {
         ...data,
@@ -37,7 +36,7 @@ export class PatientService {
     };
   }
 
-  async updatePatient(id: number, data: UpdatePatientDto): Promise<object> {
+  async updatePatient(id: number, data: PatientDto): Promise<object> {
     await this.prisma.patients.update({
       data: {
         ...data,
