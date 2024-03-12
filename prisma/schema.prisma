@@ -15,10 +15,10 @@ datasource db {
 
 model Users {
   id       Int       @id @default(autoincrement())
-  name     String // Nombres
-  lastname String? // Apellidos
-  email    String    @unique // Correo
-  password String // Contraseña
+  name     String
+  lastname String?
+  email    String    @unique
+  password String
   created  DateTime
   updated  DateTime?
   deleted  DateTime?
@@ -27,16 +27,16 @@ model Users {
 
 model Patients {
   id            Int       @id @default(autoincrement())
-  name          String // Nombres
-  lastname      String? // Apellidos
-  tp_doc        String // Tipo de documento
-  num_doc       BigInt    @unique // Número de documento
-  gender        String // Genero
-  date_of_birth DateTime // Fecha de nacimiento
-  age           Int // Edad
-  phone         BigInt // Telefono
-  address       String? // Dirección
-  email         String? // Correo
+  name          String
+  lastname      String?
+  tp_doc        String
+  num_doc       BigInt    @unique
+  gender        String
+  date_of_birth DateTime
+  age           Int
+  phone         BigInt
+  address       String?
+  email         String?
   id_user       Int
   created       DateTime
   updated       DateTime?
