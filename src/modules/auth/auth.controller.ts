@@ -2,6 +2,7 @@ import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login.dto';
 import { RegisterUserDto } from './dto/register.dto';
+import { type TokenObject } from './interfaces/auth';
 
 @Controller('auth')
 export class AuthController {
@@ -25,5 +26,10 @@ export class AuthController {
     } else {
       throw new UnauthorizedException('No se pudo registrar el usuario');
     }
+  }
+
+  @Post('logout')
+  async logout(@Body() tokenObject: TokenObject) {
+    return await this.taskService.closeSession(tokenObject);
   }
 }

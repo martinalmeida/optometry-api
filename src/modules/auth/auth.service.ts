@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login.dto';
 import { RegisterUserDto } from './dto/register.dto';
 import { compare, hash } from 'bcrypt';
+import { type TokenObject } from './interfaces/auth';
 import { dateTime } from '@helpers/dateTime';
 
 @Injectable()
@@ -43,6 +44,18 @@ export class AuthService {
     return {
       user: createUser,
       token: this.jwtService.sign(createUser),
+    };
+  }
+
+  async closeSession(tokenObject: TokenObject): Promise<object> {
+    await this.prisma.blacklist.create({
+      data: {
+        token: tokenObject.token,
+        created: dateTime(),
+      },
+    });
+    return {
+      message: 'Sesión cerrada',
     };
   }
 }

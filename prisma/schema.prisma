@@ -13,6 +13,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Blacklist {
+  id      Int      @id @default(autoincrement())
+  token   Json
+  created DateTime
+}
+
 model Users {
   id       Int       @id @default(autoincrement())
   name     String
