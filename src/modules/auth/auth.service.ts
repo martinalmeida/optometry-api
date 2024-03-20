@@ -26,6 +26,7 @@ export class AuthService {
     else
       return {
         message: 'Bienvenido a Optometry',
+        user: findUser,
         token: this.jwtService.sign(findUser),
       };
   }
