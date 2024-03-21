@@ -8,6 +8,7 @@ import {
   Put,
   NotFoundException,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { PatientDto } from './dto/patient.dto';
@@ -15,7 +16,7 @@ import { JwtAuthGuard } from 'src/guards/jwt.guard';
 
 @Controller('patient')
 export class PatientController {
-  constructor(private readonly patientService: PatientService) {}
+  constructor(private readonly patientService: PatientService) { }
 
   @Get()
   @UseGuards(JwtAuthGuard)
@@ -35,7 +36,7 @@ export class PatientController {
   @UseGuards(JwtAuthGuard)
   async getUserById(@Param('id') id: number) {
     try {
-      const userFound = await this.patientService.getPatientById(Number(id));
+      const userFound = await this.patientService.getPatientById(+id);
       if (!userFound) throw new NotFoundException('No se encontro el paciente');
       return userFound;
     } catch (error) {
@@ -60,10 +61,20 @@ export class PatientController {
   @UseGuards(JwtAuthGuard)
   async updateUser(@Param('id') id: number, @Body() data: PatientDto) {
     try {
-      const updatedUser = await this.patientService.updatePatient(id, data);
+      const updatedUser = await this.patientService.updatePatient(+id, data);
       return updatedUser;
     } catch (error) {
       throw new NotFoundException('No se pudo actualizar el paciente');
+    }
+  }
+
+  @Patch('inactivate/:id')
+  @UseGuards(JwtAuthGuard)
+  async inactivatePatient(@Param('id') id: number) {
+    try {
+      return await this.patientService.inactivatePatient(+id);
+    } catch (error) {
+      throw new NotFoundException('No se pudo inactivar el paciente');
     }
   }
 

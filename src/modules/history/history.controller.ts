@@ -8,6 +8,7 @@ import {
   Put,
   NotFoundException,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { HistoryService } from './history.service';
 import { HistoryDto } from './dto/history.dto';
@@ -35,7 +36,7 @@ export class HistoryController {
   @UseGuards(JwtAuthGuard)
   async getUserById(@Param('id') id: number) {
     try {
-      const userFound = await this.historyService.getHistoryById(Number(id));
+      const userFound = await this.historyService.getHistoryById(+id);
       if (!userFound)
         throw new NotFoundException('No se encontro la historia clínica');
       return userFound;
@@ -61,10 +62,20 @@ export class HistoryController {
   @UseGuards(JwtAuthGuard)
   async updateUser(@Param('id') id: number, @Body() data: HistoryDto) {
     try {
-      const updatedUser = await this.historyService.updateHistory(id, data);
+      const updatedUser = await this.historyService.updateHistory(+id, data);
       return updatedUser;
     } catch (error) {
       throw new NotFoundException('No se pudo actualizar la historia clínica');
+    }
+  }
+
+  @Patch('inactivate/:id')
+  @UseGuards(JwtAuthGuard)
+  async inactivateHistory(@Param('id') id: number) {
+    try {
+      return await this.historyService.inactivateHistory(+id);
+    } catch (error) {
+      throw new NotFoundException('No se pudo inactivar la historia clínica');
     }
   }
 
@@ -72,7 +83,7 @@ export class HistoryController {
   @UseGuards(JwtAuthGuard)
   async deleteUser(@Param('id') id: number) {
     try {
-      return await this.historyService.deleteHistory(Number(id));
+      return await this.historyService.deleteHistory(+id);
     } catch (error) {
       throw new NotFoundException('No se pudo eliminar la historia clínica');
     }

@@ -4,6 +4,7 @@ import {
   Length,
   IsString,
   IsDate,
+  IsNumber,
 } from 'class-validator';
 
 export class HistoryDto {
@@ -63,7 +64,7 @@ export class HistoryDto {
   treatment_plan: string;
 
   @IsOptional()
-  @IsDate()
+  @IsString()
   follow_up_date: string;
 
   @IsOptional()
@@ -97,10 +98,10 @@ export class HistoryDto {
   other_notes: string;
 
   @IsNotEmpty()
-  @Length(1, 11)
+  @IsNumber()
   id_user: number;
 
   @IsNotEmpty()
-  @Length(1, 11)
+  @IsNumber()
   id_pat: number;
 }
