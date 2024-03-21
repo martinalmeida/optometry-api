@@ -36,7 +36,7 @@ export class PatientController {
   @UseGuards(JwtAuthGuard)
   async getUserById(@Param('id') id: number) {
     try {
-      const userFound = await this.patientService.getPatientById(Number(id));
+      const userFound = await this.patientService.getPatientById(+id);
       if (!userFound) throw new NotFoundException('No se encontro el paciente');
       return userFound;
     } catch (error) {
@@ -61,7 +61,7 @@ export class PatientController {
   @UseGuards(JwtAuthGuard)
   async updateUser(@Param('id') id: number, @Body() data: PatientDto) {
     try {
-      const updatedUser = await this.patientService.updatePatient(id, data);
+      const updatedUser = await this.patientService.updatePatient(+id, data);
       return updatedUser;
     } catch (error) {
       throw new NotFoundException('No se pudo actualizar el paciente');

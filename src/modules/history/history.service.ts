@@ -8,43 +8,45 @@ export class HistoryService {
   constructor(private prisma: PrismaService) { }
 
   async getAllHistorys(): Promise<object> {
-    return this.prisma.optometricHistory.findMany({
-      where: {
-        deleted: null,
-      },
-    });
+    try {
+      const histories = await this.prisma.optometricHistory.findMany({ where: { deleted: null, }, });
+      if (!histories || histories.length === 0) { throw new Error(`No se encontraron historias. 🏥`); }
+      return { histories: histories };
+    } catch (error) {
+      return { error: error.message };
+    }
   }
 
   async getHistoryById(id: number): Promise<object> {
-    return this.prisma.optometricHistory.findUnique({
-      where: {
-        id: Number(id),
-        deleted: null,
-      },
-    });
+    try {
+      const historyById = await this.prisma.optometricHistory.findUnique({ where: { id: id, deleted: null, }, });
+      if (!historyById) { throw new Error(`Historia con ID ${id} no encontrado.`); }
+      return { historyById: historyById };
+    } catch (error) {
+      return { error: error.message };
+    }
   }
 
   async createHistory(data: HistoryDto): Promise<object> {
-    await this.prisma.optometricHistory.create({
-      data: {
-        ...data,
-        created: dateTime(),
-      },
-    });
-    return {
-      message: 'Historia creada correctamente',
-    };
+    try {
+      const history = await this.prisma.optometricHistory.create({ data: { ...data, created: dateTime(), }, });
+      if (!history) { throw new Error(`Historia con ID ${history.id } no pudo ser creada. ☣️`); }
+      return { history: history };
+    } catch (error) {
+      return { error: error.message };
+    }
   }
 
   async updateHistory(id: number, data: HistoryDto): Promise<object> {
-    await this.prisma.optometricHistory.update({
-      data: {
-        ...data,
-        updated: dateTime(),
-      },
-      where: { id: Number(id) },
-    });
-    return { message: 'Historia actualizada correctamente' };
+    try {
+      const history = await this.prisma.optometricHistory.findUnique({ where: { id: id, deleted: null, }, }); 
+      if (!history) { throw new Error(`Historia con ID ${id} no encontrado y no fue encontrada. ☣️`); }
+      const updatedHistory = await this.prisma.optometricHistory.update({ where: { id: id }, data: data, });
+      if (!updatedHistory) { throw new Error(`Historia con ID ${id} no pudo ser actualizada. ☣️`); }
+      return { updatedHistory: updatedHistory };
+    } catch (error) {
+      return { error: error.message };
+    }
   }
 
   async inactivateHistory(id: number): Promise<object> {
@@ -62,16 +64,14 @@ export class HistoryService {
   }
 
   async deleteHistory(id: number): Promise<object> {
-    await this.prisma.optometricHistory.update({
-      data: {
-        deleted: dateTime(),
-      },
-      where: {
-        id: Number(id),
-      },
-    });
-    return {
-      message: 'Historia eliminada correctamente',
-    };
+    try {
+      const History = await this.prisma.optometricHistory.findUnique({ where: { id }, });
+      if (!History) { throw new Error(`Historia con ID ${id} no encontrado.`); }
+      //const deleteHistory = await this.prisma.optometricHistory.delete({ where: { id }, });
+      //if (!deleteHistory) { throw new Error(`Historia con ID ${id} no pudo ser eliminada. ☣️`); }
+      return { message: 'Historia eliminada correctamente. 📄' };
+    } catch (error) {
+      return { error: error.message };
+    }
   }
 }

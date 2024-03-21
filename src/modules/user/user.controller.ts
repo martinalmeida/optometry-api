@@ -51,7 +51,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   async updateUser(@Param('id') id: number, @Body() data: UserDto) {
     try {
-      const updatedUser = await this.userService.updateUser(id, data);
+      const updatedUser = await this.userService.updateUser(+id, data);
       return updatedUser;
     } catch (error) {
       throw new NotFoundException('No se pudo actualizar el usuario');

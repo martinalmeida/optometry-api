@@ -36,11 +36,11 @@ model Patients {
   name          String
   lastname      String?
   tp_doc        String
-  num_doc       Int       @unique 
+  num_doc       String       @unique 
   gender        String
   date_of_birth DateTime
   age           Int
-  phone         Int
+  phone         String
   address       String?
   email         String?
   id_user       Int

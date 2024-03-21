@@ -4,6 +4,8 @@ import {
   IsString,
   IsEmail,
   Length,
+  IsInt,
+  Min,
 } from 'class-validator';
 
 export class PatientDto {
@@ -23,8 +25,9 @@ export class PatientDto {
   tp_doc: string;
 
   @IsNotEmpty()
-  @Length(1, 20)
-  num_doc: number;
+  @IsString()
+  @Length(1, 191)
+  num_doc: string;
 
   @IsNotEmpty()
   @IsString()
@@ -36,12 +39,14 @@ export class PatientDto {
   date_of_birth: string;
 
   @IsNotEmpty()
-  @Length(1, 11)
+  @IsInt()
+  @Min(1)
   age: number;
 
   @IsNotEmpty()
-  @Length(1, 20)
-  phone: number;
+  @IsString()
+  @Length(1, 191)
+  phone: string;
 
   @IsOptional()
   @IsString()
@@ -54,6 +59,7 @@ export class PatientDto {
   email: string;
 
   @IsNotEmpty()
-  @Length(1, 11)
+  @IsInt()
+  @Min(1)
   id_user: number;
 }
