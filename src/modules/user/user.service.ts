@@ -6,7 +6,7 @@ import { dateTime } from '@helpers/dateTime';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async getAllUsers(): Promise<object> {
     return this.prisma.users.findMany({
@@ -71,6 +71,19 @@ export class UserService {
     });
     return { message: 'Usuario actualizado correctamente' };
   }
+
+  async inactivateUser(id: number): Promise<object> {
+    try {
+      const user = await this.prisma.users.findUnique({ where: { id }, });
+      if (!user) { throw new Error(`Usuario con ID ${id} no encontrado.`); }
+      const newStatus = !user.status;
+      const updatedUser = await this.prisma.users.update({ where: { id }, data: { status: newStatus, updated: new Date() }, });
+      return { user: updatedUser };
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
 
   async deleteUser(id: number): Promise<object> {
     await this.prisma.users.update({

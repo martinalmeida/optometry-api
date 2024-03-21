@@ -8,6 +8,7 @@ import {
   Put,
   NotFoundException,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { HistoryService } from './history.service';
 import { HistoryDto } from './dto/history.dto';
@@ -65,6 +66,16 @@ export class HistoryController {
       return updatedUser;
     } catch (error) {
       throw new NotFoundException('No se pudo actualizar la historia clínica');
+    }
+  }
+
+  @Patch('inactivate/:id')
+  @UseGuards(JwtAuthGuard)
+  async inactivateHistory(@Param('id') id: number) {
+    try {
+      return await this.historyService.inactivateHistory(+id);
+    } catch (error) {
+      throw new NotFoundException('No se pudo inactivar la historia clínica');
     }
   }
 

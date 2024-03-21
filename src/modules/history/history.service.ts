@@ -5,7 +5,7 @@ import { dateTime } from '@helpers/dateTime';
 
 @Injectable()
 export class HistoryService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async getAllHistorys(): Promise<object> {
     return this.prisma.optometricHistory.findMany({
@@ -45,6 +45,20 @@ export class HistoryService {
       where: { id: Number(id) },
     });
     return { message: 'Historia actualizada correctamente' };
+  }
+
+  async inactivateHistory(id: number): Promise<object> {
+    try {
+      const history = await this.prisma.optometricHistory.findUnique({ where: { id }, });
+      if (!history) { throw new Error(`Historia con ID ${id} no encontrado.`); }
+      const newStatus = !history.status;
+      history.status = newStatus;
+      history.updated = new Date();
+      const updatedHistory = await this.prisma.optometricHistory.update({ where: { id }, data: history, });
+      return { history: updatedHistory };
+    } catch (error) {
+      return { error: error.message };
+    }
   }
 
   async deleteHistory(id: number): Promise<object> {

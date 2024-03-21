@@ -1,21 +1,11 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  NotFoundException,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, NotFoundException, UseGuards, Patch, UnauthorizedException, } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { JwtAuthGuard } from 'src/guards/jwt.guard';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Get()
   @UseGuards(JwtAuthGuard)
@@ -45,6 +35,7 @@ export class UserController {
     }
   }
 
+
   @Post()
   @UseGuards(JwtAuthGuard)
   async createUser(@Body() data: UserDto) {
@@ -64,6 +55,16 @@ export class UserController {
       return updatedUser;
     } catch (error) {
       throw new NotFoundException('No se pudo actualizar el usuario');
+    }
+  }
+
+  @Patch('inactivate/:id')
+  @UseGuards(JwtAuthGuard)
+  async inactivateUser(@Param('id') id: number) {
+    try {
+      return await this.userService.inactivateUser(+id);
+    } catch (error) {
+      throw new NotFoundException('No se pudo inactivar el usuario');
     }
   }
 

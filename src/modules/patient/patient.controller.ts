@@ -8,6 +8,7 @@ import {
   Put,
   NotFoundException,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { PatientDto } from './dto/patient.dto';
@@ -15,7 +16,7 @@ import { JwtAuthGuard } from 'src/guards/jwt.guard';
 
 @Controller('patient')
 export class PatientController {
-  constructor(private readonly patientService: PatientService) {}
+  constructor(private readonly patientService: PatientService) { }
 
   @Get()
   @UseGuards(JwtAuthGuard)
@@ -64,6 +65,16 @@ export class PatientController {
       return updatedUser;
     } catch (error) {
       throw new NotFoundException('No se pudo actualizar el paciente');
+    }
+  }
+
+  @Patch('inactivate/:id')
+  @UseGuards(JwtAuthGuard)
+  async inactivatePatient(@Param('id') id: number) {
+    try {
+      return await this.patientService.inactivatePatient(+id);
+    } catch (error) {
+      throw new NotFoundException('No se pudo inactivar el paciente');
     }
   }
 
