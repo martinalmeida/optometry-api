@@ -19,12 +19,35 @@ model Blacklist {
   created DateTime
 }
 
+model Companies {
+  id      Int       @id @default(autoincrement())
+  name    String
+  nit     String
+  email   String?
+  phone   String?
+  created DateTime
+  updated DateTime?
+  deleted DateTime?
+  status  Boolean   @default(true)
+}
+
+model Roles {
+  id      Int       @id @default(autoincrement())
+  name    String
+  created DateTime
+  updated DateTime?
+  deleted DateTime?
+  status  Boolean   @default(true)
+}
+
 model Users {
   id       Int       @id @default(autoincrement())
   name     String
   lastname String?
   email    String    @unique
   password String
+  id_role  Int
+  id_comp  Int
   created  DateTime
   updated  DateTime?
   deleted  DateTime?
@@ -36,7 +59,7 @@ model Patients {
   name          String
   lastname      String?
   tp_doc        String
-  num_doc       String       @unique 
+  num_doc       String    @unique
   gender        String
   date_of_birth DateTime
   age           Int
@@ -44,6 +67,7 @@ model Patients {
   address       String?
   email         String?
   id_user       Int
+  id_comp       Int
   created       DateTime
   updated       DateTime?
   deleted       DateTime?
@@ -72,6 +96,7 @@ model OptometricHistory {
   other_notes          String?
   id_user              Int
   id_pat               Int
+  id_comp              Int
   created              DateTime
   updated              DateTime?
   deleted              DateTime?
