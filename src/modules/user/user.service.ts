@@ -9,7 +9,29 @@ import * as moment from 'moment-timezone';
 export class UserService {
   constructor(private prisma: PrismaService) { }
 
-  async getAllUsers(): Promise<object> {
+  async create(data: UserDto): Promise<object> {
+    const password = await hash(data.password, Number(process.env.SALT_ROUNDS));
+    try {
+      const user = await this.prisma.users.findUnique({ where: { email: data.email } });
+      if (user) { throw new Error(`El usuario ${data.email} ya existe.`); }
+      const newUser = {
+        name: data.name,
+        lastname: data.lastname,
+        email: data.email, 
+        password: password, 
+        id_role: data.id_role,
+        id_comp: data.id_comp,
+        created: new Date(new Date().getTime() - 5 * 60 * 60 * 1000),
+      };
+      const createUser = await this.prisma.users.create({ data: newUser, });
+      if (!createUser) { throw new Error(`No se pudo crear el usuario ${data.email}.`); }
+      return { message: 'Usuario creado correctamente. 👌', };
+    } catch (error) {
+      return { error: error.message };
+    }
+  }
+
+  async findAll(): Promise<object> {
     try {
       const users = await this.prisma.users.findMany({ select: { id: true, name: true, lastname: true, email: true, status: true }, where: { deleted: null } });
       if (!users || users.length === 0) { throw new Error(`No se encontraron usuarios.`); }
@@ -19,7 +41,7 @@ export class UserService {
     }
   }
 
-  async getUserById(id: number): Promise<object> {
+  async findOne(id: number): Promise<object> {
     try {
       const userById = await this.prisma.users.findUnique({
         where: { id: id, deleted: null },
@@ -32,20 +54,7 @@ export class UserService {
     }
   }
 
-  async createUser(data: UserDto): Promise<object> {
-    const password = await hash(data.password, Number(process.env.SALT_ROUNDS));
-    try {
-      const user = await this.prisma.users.findUnique({ where: { email: data.email } });
-      if (user) { throw new Error(`El usuario ${data.email} ya existe.`); }
-      const newUser = { name: data.name, lastname: data.lastname, email: data.email, password: password, created: moment().tz('America/Bogota').format(), };
-      await this.prisma.users.create({ data: newUser, });
-      return { message: 'Usuario creado correctamente. 👌', };
-    } catch (error) {
-      return { error: error.message };
-    }
-  }
-
-  async updateUser(id: number, data: UserDto): Promise<object> {
+  async update(id: number, data: UserDto): Promise<object> {
     const password = await hash(data.password, Number(process.env.SALT_ROUNDS));
     try {
       const user = await this.prisma.users.findUnique({ where: { id: Number(id) }, });
@@ -66,7 +75,7 @@ export class UserService {
     }
   }
 
-  async inactivateUser(id: number): Promise<object> {
+  async inativate(id: number): Promise<object> {
     try {
       const user = await this.prisma.users.findUnique({ where: { id }, });
       if (!user) { throw new Error(`Usuario con ID ${id} no encontrado.`); }
@@ -78,8 +87,7 @@ export class UserService {
     }
   }
 
-
-  async deleteUser(id: number): Promise<object> {
+  async remove(id: number): Promise<object> {
     try {
       const deletedUser = await this.prisma.users.findUnique({ where: { id }, });
       if (!deletedUser) { throw new Error(`Usuario con ID ${id} no encontrado.`); }

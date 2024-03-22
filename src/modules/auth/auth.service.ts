@@ -39,6 +39,8 @@ export class AuthService {
         lastname: data.lastname,
         email: data.email,
         password: password,
+        id_role: data.id_role,
+        id_comp: data.id_comp,
         created: dateTime(),
       },
     });

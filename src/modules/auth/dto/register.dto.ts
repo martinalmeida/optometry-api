@@ -14,4 +14,10 @@ export class RegisterUserDto {
   @IsNotEmpty()
   @Length(6, 255)
   password: string;
+
+  @IsNotEmpty()
+  id_role: number;
+
+  @IsNotEmpty()
+  id_comp: number;
 }

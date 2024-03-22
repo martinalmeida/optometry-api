@@ -20,4 +20,10 @@ export class UserDto {
   @IsString()
   @Length(6, 191)
   password: string;
+
+  @IsNotEmpty()
+  id_role: number;
+
+  @IsNotEmpty()
+  id_comp: number;
 }

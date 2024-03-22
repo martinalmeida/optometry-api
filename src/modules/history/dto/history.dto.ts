@@ -104,4 +104,8 @@ export class HistoryDto {
   @IsNotEmpty()
   @IsNumber()
   id_pat: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  id_comp: number;
 }

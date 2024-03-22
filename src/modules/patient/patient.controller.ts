@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  NotFoundException,
-  UseGuards,
-  Patch,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, NotFoundException, UseGuards, Patch, } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { PatientDto } from './dto/patient.dto';
 import { JwtAuthGuard } from 'src/guards/jwt.guard';
@@ -18,12 +7,22 @@ import { JwtAuthGuard } from 'src/guards/jwt.guard';
 export class PatientController {
   constructor(private readonly patientService: PatientService) { }
 
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  async create(@Body() data: PatientDto) {
+    try {
+      const user = await this.patientService.create(data);
+      return user;
+    } catch (error) {
+      throw new NotFoundException('No se pudo crear el paciente');
+    }
+  }
+
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getAllUsers() {
+  async findAll() {
     try {
-      const users = await this.patientService.getAllPatients();
-      if (!users) throw new NotFoundException('No se encontraron pacientes');
+      const users = await this.patientService.findAll();
       return users;
     } catch (error) {
       throw new NotFoundException(
@@ -34,10 +33,9 @@ export class PatientController {
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  async getUserById(@Param('id') id: number) {
+  async findOne(@Param('id') id: number) {
     try {
-      const userFound = await this.patientService.getPatientById(+id);
-      if (!userFound) throw new NotFoundException('No se encontro el paciente');
+      const userFound = await this.patientService.findOne(+id);
       return userFound;
     } catch (error) {
       throw new NotFoundException(
@@ -46,22 +44,11 @@ export class PatientController {
     }
   }
 
-  @Post()
-  @UseGuards(JwtAuthGuard)
-  async createUser(@Body() data: PatientDto) {
-    try {
-      const user = await this.patientService.createPatient(data);
-      return user;
-    } catch (error) {
-      throw new NotFoundException('No se pudo crear el paciente');
-    }
-  }
-
   @Put(':id')
   @UseGuards(JwtAuthGuard)
-  async updateUser(@Param('id') id: number, @Body() data: PatientDto) {
+  async update(@Param('id') id: number, @Body() data: PatientDto) {
     try {
-      const updatedUser = await this.patientService.updatePatient(+id, data);
+      const updatedUser = await this.patientService.update(+id, data);
       return updatedUser;
     } catch (error) {
       throw new NotFoundException('No se pudo actualizar el paciente');
@@ -70,9 +57,10 @@ export class PatientController {
 
   @Patch('inactivate/:id')
   @UseGuards(JwtAuthGuard)
-  async inactivatePatient(@Param('id') id: number) {
+  async inativate(@Param('id') id: number) {
     try {
-      return await this.patientService.inactivatePatient(+id);
+      const updatedUser = await this.patientService.inativate(+id);
+      return updatedUser;
     } catch (error) {
       throw new NotFoundException('No se pudo inactivar el paciente');
     }
@@ -80,9 +68,9 @@ export class PatientController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  async deleteUser(@Param('id') id: number) {
+  async remove(@Param('id') id: number) {
     try {
-      return await this.patientService.deletePatient(Number(id));
+      return await this.patientService.remove(Number(id));
     } catch (error) {
       throw new NotFoundException('No se pudo eliminar el paciente');
     }

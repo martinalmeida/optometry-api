@@ -62,4 +62,9 @@ export class PatientDto {
   @IsInt()
   @Min(1)
   id_user: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  @Min(1)
+  id_comp: number;
 }
