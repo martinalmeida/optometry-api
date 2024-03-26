@@ -19,7 +19,8 @@ export class PatientService {
 
   async findAll(): Promise<object> {
     try {
-      const Patient = await this.prisma.patients.findMany({ where: { deleted: null, } });
+      const Patient = await this.prisma.patients.findMany({});
+      if (!Patient || Patient.length === 0) { return { message: `No se encontraron pacientes.` }; }
       return { Patient: Patient };
     } catch (error) {
       return { error: error.message };
@@ -29,7 +30,7 @@ export class PatientService {
   async findOne(id: number): Promise<object> {
     try {
       const PatientById = await this.prisma.patients.findUnique({ where: { id: id, deleted: null, }, });
-      if (!PatientById) { throw new Error(`Paciente con ID ${id} no encontrado.`); }
+      if (!PatientById) { return { message: `Paciente con ID ${id} no encontrado.` }; }
       return { PatientById: PatientById };
     } catch (error) {
       return { error: error.message };
@@ -39,10 +40,10 @@ export class PatientService {
 
   async update(id: number, data: PatientDto): Promise<object> {
     try {
-      const Patient = await this.prisma.patients.findUnique({ where: { id: id, deleted: null, }, });
-      if (!Patient) { throw new Error(`Paciente con ID ${id} no encontrado y no fue encontrada.`); }
-      const updatedPatient = await this.prisma.patients.update({ where: { id: id }, data: data, });
-      if (!updatedPatient) { throw new Error(`Paciente con ID ${id} no pudo ser actualizado. ☣️`); }
+      const Patient = await this.prisma.patients.findUnique({ where: { id }, });
+      if (!Patient) { return { message: `Paciente con ID ${id} no encontrado y no fue encontrada. 🙅‍♀️` }; }
+      const updatedPatient = await this.prisma.patients.update({ where: { id }, data });
+      if (!updatedPatient) { throw new Error(`Paciente con ID ${id} no pudo ser actualizado. 🙅‍♀️`); }
       return { updatedPatient: updatedPatient };
     } catch (error) {
       return { error: error.message };
@@ -52,11 +53,12 @@ export class PatientService {
   async inativate(id: number): Promise<object> {
     try {
       const patient = await this.prisma.patients.findUnique({ where: { id }, });
-      if (!patient) { throw new Error(`Paciente con ID ${id} no encontrado.`); }
+      if (!patient) { return { message: `Paciente con ID ${id} no encontrado.` }; }
       const newStatus = !patient.status;
       patient.status = newStatus;
       patient.updated = new Date();
       const updatedPatient = await this.prisma.patients.update({ where: { id }, data: patient, });
+      if (!updatedPatient) { throw new Error(`Paciente con ID ${id} no pudo ser inactivada. ☣️`); }
       return { patient: updatedPatient };
     } catch (error) {
       return { error: error.message };
@@ -66,7 +68,7 @@ export class PatientService {
   async remove(id: number): Promise<object> {
     try {
       const PatientById = await this.prisma.patients.findUnique({ where: { id }, });
-      if (!PatientById) { throw new Error(`Paciente con ID ${id} no encontrado.`); }
+      if (!PatientById) { return { message: `Paciente con ID ${id} no encontrado.` }; }
       // const deletePatient = await this.prisma.patients.delete({ where: { id } });
       // if (!deletePatient) { throw new Error(`Paciente con ID ${id} no pudo ser eliminado. ☣️`); }
       return { message: 'Paciente eliminado correctamente' };

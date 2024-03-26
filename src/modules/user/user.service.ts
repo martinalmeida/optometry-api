@@ -13,18 +13,9 @@ export class UserService {
     const password = await hash(data.password, Number(process.env.SALT_ROUNDS));
     try {
       const user = await this.prisma.users.findUnique({ where: { email: data.email } });
-      if (user) { throw new Error(`El usuario ${data.email} ya existe.`); }
-      const newUser = {
-        name: data.name,
-        lastname: data.lastname,
-        email: data.email, 
-        password: password, 
-        id_role: data.id_role,
-        id_comp: data.id_comp,
-        created: new Date(new Date().getTime() - 5 * 60 * 60 * 1000),
-      };
-      const createUser = await this.prisma.users.create({ data: newUser, });
-      if (!createUser) { throw new Error(`No se pudo crear el usuario ${data.email}.`); }
+      if (user) { throw new Error(`El usuario con email ${data.email} ya existe, por favor inicia sesión.`); }
+      const createUser = await this.prisma.users.create({ data: { ...data, password, created: moment().tz('America/Bogota').format(), }, });
+      if (!createUser) { throw new Error(`Usario con email ${data.email} no pudo ser creado.`); }
       return { message: 'Usuario creado correctamente. 👌', };
     } catch (error) {
       return { error: error.message };
@@ -34,7 +25,7 @@ export class UserService {
   async findAll(): Promise<object> {
     try {
       const users = await this.prisma.users.findMany({ select: { id: true, name: true, lastname: true, email: true, status: true }, where: { deleted: null } });
-      if (!users || users.length === 0) { throw new Error(`No se encontraron usuarios.`); }
+      if (!users || users.length === 0) { return { message: `No se encontraron usuarios.` }; }
       return { users: users };
     } catch (error) {
       return { error: error.message };
@@ -43,11 +34,8 @@ export class UserService {
 
   async findOne(id: number): Promise<object> {
     try {
-      const userById = await this.prisma.users.findUnique({
-        where: { id: id, deleted: null },
-        select: { id: true, name: true, lastname: true, email: true, status: true }
-      });
-      if (!userById) { throw new Error(`Usuario con ID ${id} no encontrado.`); }
+      const userById = await this.prisma.users.findUnique({ where: { id }, select: { id: true, name: true, lastname: true, email: true, status: true }, });
+      if (!userById) { return { message: `Usuario con ID ${id} no encontrado.` }; }
       return { userById: userById };
     } catch (error) {
       return { error: error.message };
@@ -58,7 +46,7 @@ export class UserService {
     const password = await hash(data.password, Number(process.env.SALT_ROUNDS));
     try {
       const user = await this.prisma.users.findUnique({ where: { id: Number(id) }, });
-      if (!user) { throw new Error(`Usuario con ID ${id} no encontrado.`); }
+      if (!user) { return { message: `Usuario con ID ${id} no encontrado.` }; }
       await this.prisma.users.update({
         where: { id: id },
         data: {
@@ -80,7 +68,10 @@ export class UserService {
       const user = await this.prisma.users.findUnique({ where: { id }, });
       if (!user) { throw new Error(`Usuario con ID ${id} no encontrado.`); }
       const newStatus = !user.status;
-      const updatedUser = await this.prisma.users.update({ where: { id }, data: { status: newStatus, updated: new Date() }, });
+      user.status = newStatus;
+      user.updated = new Date();
+      const updatedUser = await this.prisma.users.update({ where: { id }, data: user, });
+      if (!updatedUser) { throw new Error(`Usuario con ID ${id} no pudo ser inactivado. ☣️`); }
       return { user: updatedUser };
     } catch (error) {
       return { error: error.message };
@@ -90,8 +81,9 @@ export class UserService {
   async remove(id: number): Promise<object> {
     try {
       const deletedUser = await this.prisma.users.findUnique({ where: { id }, });
-      if (!deletedUser) { throw new Error(`Usuario con ID ${id} no encontrado.`); }
-      //await this.prisma.users.delete({ where: { id } });
+      if (!deletedUser) { return { message: `Usuario con ID ${id} no encontrado.` }; }
+      //const deleteUser = await this.prisma.users.delete({ where: { id }, });
+      //if (!deleteUser) { throw new Error(`Usuario con ID ${id} no pudo ser eliminado. ☣️`); }
       return { message: 'Usuario eliminado correctamente. 🪥🫧🧽' };
     } catch (error) {
       return { error: error.message };

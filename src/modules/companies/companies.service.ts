@@ -11,7 +11,7 @@ export class CompaniesService {
       const { name, nit, email, phone } = createCompanyDto;
       const data = { name, nit, email, phone, created: new Date() };
       const createCompany = await this.prisma.companies.create({ data });
-      if (!createCompany) { throw new Error('No se pudo crear la empresa'); }
+      if (!createCompany) { throw new Error(`La compañia con ID ${createCompany.id} no pudo ser creada. 🏢`); }
       return { createCompany: createCompany };
     } catch (error) {
       return { error: error.message };
@@ -30,18 +30,18 @@ export class CompaniesService {
 
   async findOne(id: number) {
     try {
-      const company = await this.prisma.companies.findUnique({ where: { id, deleted: null, }, });
-      if (!company) { return { message: `La empresa con ID ${id} no fue encontrada. ☣️` } }
+      const company = await this.prisma.companies.findUnique({ where: { id }, });
+      if (!company) { return { message: `La empresa con ID ${id} no fue encontrada. ☣️` }; }
       return { company: company };
     } catch (error) {
       return { error: error.message };
     }
   }
 
-  async update(id: number, updateCompanyDto: UpdateCompanyDto) {
+  async update(id: number, data: UpdateCompanyDto): Promise<object> {
     try {
-      const { name, nit, email, phone } = updateCompanyDto;
-      const data = { name, nit, email, phone, updated: new Date() };
+      //const { name, nit, email, phone } = updateCompanyDto;
+      //const data = { name, nit, email, phone, updated: new Date() };
       const updatedCompany = await this.prisma.companies.update({ where: { id }, data });
       if (!updatedCompany) { throw new Error(`La empresa con ID ${id} no pudo ser actualizada. ☣️`); }
       return { updatedCompany: updatedCompany };
@@ -59,7 +59,7 @@ export class CompaniesService {
       company.updated = new Date();
       const inativateCompany = await this.prisma.companies.update({ where: { id }, data: company });
       if (!inativateCompany) { throw new Error(`La empresa con ID ${id} no pudo ser inactivada. ☣️`); }
-      return { message: `La empresa con ID ${id} fue inactivada. ☣️` };
+      return { message: `La empresa con ID ${id} inactivada correctamente. 📄` };
     } catch (error) {
       return { error: error.message };
     }
