@@ -24,7 +24,7 @@ export class UserService {
 
   async findAll(): Promise<object> {
     try {
-      const users = await this.prisma.users.findMany({ select: { id: true, name: true, lastname: true, email: true, status: true }, where: { deleted: null } });
+      const users = await this.prisma.users.findMany({ select: { id: true, name: true, lastname: true, email: true, id_role: true, id_comp: true, status: true }, });
       if (!users || users.length === 0) { return { message: `No se encontraron usuarios.` }; }
       return { users: users };
     } catch (error) {
@@ -34,7 +34,7 @@ export class UserService {
 
   async findOne(id: number): Promise<object> {
     try {
-      const userById = await this.prisma.users.findUnique({ where: { id }, select: { id: true, name: true, lastname: true, email: true, status: true }, });
+      const userById = await this.prisma.users.findUnique({ where: { id }, select: { id: true, name: true, lastname: true, email: true, id_role: true, id_comp: true, status: true }, });
       if (!userById) { return { message: `Usuario con ID ${id} no encontrado.` }; }
       return { userById: userById };
     } catch (error) {
